@@ -1,0 +1,17 @@
+{
+  "name": "ChannelIncome — YouTube Revenue Calculator",
+  "short_name": "ChannelIncome",
+  "description": "Free YouTube money calculator. Estimate channel earnings by name, views, niche & country.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#E0201A",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"]
+}
