@@ -3,6 +3,35 @@ const nextConfig = {
     // 1. Slash handling fix karein
     trailingSlash: false,
 
+    // 2. Better crawling — add proper headers for HTML pages
+    async headers() {
+        return [
+            {
+                source: '/(.*)',
+                headers: [
+                    {
+                        key: 'X-Content-Type-Options',
+                        value: 'nosniff',
+                    },
+                ],
+            },
+            {
+                // Allow Google to cache the sitemap
+                source: '/sitemap.xml',
+                headers: [
+                    {
+                        key: 'Content-Type',
+                        value: 'application/xml',
+                    },
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=86400, stale-while-revalidate=3600',
+                    },
+                ],
+            },
+        ];
+    },
+
     images: {
         remotePatterns: [
             { protocol: 'https', hostname: 'yt3.googleusercontent.com' },

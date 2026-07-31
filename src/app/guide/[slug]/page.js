@@ -10,6 +10,20 @@ import RelatedGuides from "../../../components/RelatedGuides/RelatedGuides";
 import RelatedTools from "../../../components/RelatedTools/RelatedTools";
 import { getRelatedGuides } from "../../hooks/getRelatedGuides";
 
+export const revalidate = 3600;
+
+// Pre-render known guide slugs at build time for better indexing
+export async function generateStaticParams() {
+  try {
+    await connectDB();
+    const guides = await Guide.find({}).select("slug").lean().maxTimeMS(5000);
+    return guides.map((g) => ({ slug: g.slug }));
+  } catch (e) {
+    console.error("generateStaticParams error (returning empty):", e.message);
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   await connectDB();

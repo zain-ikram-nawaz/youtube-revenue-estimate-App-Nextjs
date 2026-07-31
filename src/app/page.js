@@ -1,8 +1,12 @@
 // app/page.js (Home Page)
 import HomeIntroduction from "../components/SeoText/homeText";
 import HomeFAQ from "../components/FAQ/FAQ";
+import Link from "next/link";
+import { getAllLiveTools } from "../lib/tools";
 
 export const revalidate = 3600;
+
+const TOOLS = getAllLiveTools();
 
 const homeFaqData = [
   {
@@ -61,10 +65,10 @@ const homeFaqData = [
 
 export const metadata = {
   title: {
-    absolute: "Free YouTube Money Calculator — Check Any Channel's Earnings | ChannelIncome",
+    absolute: "YouTube Money Calculator — Free Channel Earnings Estimator 2026",
   },
   description:
-    "Free YouTube money calculator. Enter any channel name, views, niche & country for an instant RPM & CPM-based earnings estimate. No signup — results in seconds.",
+    "Check any YouTube channel's earnings instantly. Enter channel name, views & niche to get a real CPM/RPM-based estimate. Free, no signup. Updated for 2026.",
   alternates: {
     canonical: "https://channelincome.com",
   },
@@ -80,7 +84,7 @@ export const metadata = {
     "cpm calculator youtube",
   ],
   openGraph: {
-    title: "Free YouTube Money Calculator — Check Any Channel's Earnings | ChannelIncome",
+    title: "YouTube Money Calculator — Check Any Channel's Earnings Free",
     description:
       "Instant YouTube earnings estimate by channel name, views, niche & country. Real CPM & RPM data. Free, no signup needed.",
     url: "https://channelincome.com",
@@ -96,7 +100,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free YouTube Money Calculator — Check Any Channel's Earnings",
+    title: "YouTube Money Calculator — Check Any Channel's Earnings Free",
     description:
       "Instant YouTube earnings estimate by channel name, views, niche & country. Real CPM & RPM data. Free forever.",
     images: ["https://channelincome.com/icon.png"],
@@ -240,6 +244,39 @@ export default async function Home() {
       <JsonLdApp />
       <JsonLdDataset />
       <JsonLdFAQ />
+
+      {/* ── TOOLS GRID (above the fold — internal linking + crawlable content) ── */}
+      <section className="bg-background px-4 py-8 md:py-12">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="font-display text-3xl md:text-5xl font-extrabold text-foreground mb-3 tracking-tight leading-tight">
+              YouTube Money Calculator — Check Any Channel&apos;s Earnings
+            </h1>
+            <p className="text-muted text-sm md:text-base max-w-2xl mx-auto">
+              Free tools to estimate YouTube revenue, CPM, RPM, and channel earnings by name, niche & country. No signup required.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            {TOOLS.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={tool.href}
+                className="group bg-background border border-border rounded-2xl p-5 shadow-sm hover:border-primary/40 hover:shadow-md transition-all"
+              >
+                <span className="text-2xl block mb-2">{tool.icon}</span>
+                <span className="block text-sm font-bold text-foreground group-hover:text-primary transition-colors">
+                  {tool.shortName}
+                </span>
+                <span className="block text-xs text-muted leading-snug mt-1">
+                  {tool.desc}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <HomeIntroduction />
       <HomeFAQ faq={homeFaqData} />
     </>

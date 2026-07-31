@@ -3,6 +3,7 @@ import FAQ from "../../../components/FAQ/FAQ";
 import RelatedTools from "../../../components/RelatedTools/RelatedTools";
 import Script from "next/script";
 import Link from "next/link";
+export const revalidate = 3600;
 
 export const metadata = {
   title: "YouTube Channel Comparison Tool — Compare Revenue & Stats (2026)",
