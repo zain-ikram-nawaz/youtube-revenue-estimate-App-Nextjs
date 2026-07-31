@@ -2,7 +2,7 @@
 import HomeIntroduction from "../components/SeoText/homeText";
 import HomeFAQ from "../components/FAQ/FAQ";
 import Link from "next/link";
-import { getAllLiveTools } from "../lib/tools";
+import { getAllLiveTools } from "./lib/tools";
 
 export const revalidate = 3600;
 
