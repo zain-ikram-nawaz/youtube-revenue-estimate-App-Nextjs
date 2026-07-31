@@ -7,8 +7,7 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("ycresttoken")?.value;
 
-  // ========= BLOCK COMPONENT PAGES =========
-  // Component pages ko homepage redirect karo
+  
   if (pathname.startsWith("/components/")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
