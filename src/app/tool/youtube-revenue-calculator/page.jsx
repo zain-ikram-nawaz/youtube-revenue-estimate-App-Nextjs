@@ -5,11 +5,12 @@ import Script from "next/script";
 import Link from "next/link";
 import { Zap } from "lucide-react";
 import RelatedTools from "../../../components/RelatedTools/RelatedTools";
+export const revalidate = 3600;
 
 export const metadata = {
   title: "YouTube Revenue Calculator — Free CPM & RPM Estimator (2026)",
   description:
-    "Calculate YouTube channel earnings by channel name, views, niche & country. Real 2026 CPM rates by country and RPM by niche. Instant estimate — no signup required.",
+    "See how much any YouTube channel makes. Enter a channel name → get instant CPM & RPM-based earnings. Free, no signup. 2026 data.",
   alternates: {
     canonical: "https://channelincome.com/tool/youtube-revenue-calculator"
   },
@@ -26,7 +27,7 @@ export const metadata = {
   openGraph: {
     title: "YouTube Revenue Calculator — Free CPM & RPM Estimator | ChannelIncome",
     description:
-      "Estimate YouTube earnings by channel name, views, niche & country. Real CPM rates by country and RPM by niche. Free 2026 tool, no signup.",
+      "See how much any YouTube channel makes — instant CPM & RPM-based earnings estimate by channel name. Free, no signup.",
     url: "https://channelincome.com/tool/youtube-revenue-calculator",
     siteName: "ChannelIncome",
     locale: "en_US",

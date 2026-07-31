@@ -11,5 +11,5 @@ Disallow: /unauthorized
 # Host
 Host: https://channelincome.com
 
-# Sitemap
-Sitemap: https://channelincome.com/api/sitemap.xml
+# Sitemap — moved to root so it's NOT blocked by Disallow: /api/
+Sitemap: https://channelincome.com/sitemap.xml
