@@ -100,6 +100,17 @@ const nextConfig = {
                 destination: '/guide/:slug*',
                 permanent: true,
             },
+            // ── Deleted guide posts (still indexed by Google) → tool page ──
+            {
+                source: '/guide/how-to-start-a-youtube-channel-step-by-step-beginners-guide',
+                destination: '/tool/youtube-revenue-calculator',
+                permanent: true,
+            },
+            {
+                source: '/guide/youtube-monetization-rpm-cpm-guide',
+                destination: '/tool/youtube-revenue-calculator',
+                permanent: true,
+            },
         ];
     },
 };

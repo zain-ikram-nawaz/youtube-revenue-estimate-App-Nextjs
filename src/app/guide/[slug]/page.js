@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   await connectDB();
   const guide = await Guide.findOne({ slug }).lean();
-  if (!guide) return { title: "Guide Not Found" };
+  if (!guide) return { title: "Guide Not Found", robots: { index: false, follow: true } };
 
   const canonicalUrl = `https://channelincome.com/guide/${guide.slug}`;
   const ogImage = guide.coverImage || guide.thumbnail || "https://channelincome.com/icon.png";

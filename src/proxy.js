@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { connectDB } from "./app/lib/db";
+import Guide from "./models/guide";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-export async function middleware(req) {
+export async function proxy(req) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("ycresttoken")?.value;
 
-  
   if (pathname.startsWith("/components/")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
@@ -52,7 +53,7 @@ export async function middleware(req) {
     }
   }
 
-  // Skip middleware for static files
+  // Skip static/internal paths
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
@@ -62,12 +63,24 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
-  try {
-    // This triggers Next.js route matching
-    return NextResponse.next();
-  } catch {
-    return NextResponse.rewrite(new URL("/404", req.url));
+  // Guide detail pages: notFound() inside the page component does not
+  // reliably produce a real 404 status under App Router dynamic rendering,
+  // so verify slug existence here and rewrite to Next's real /404 when missing.
+  const guideSlugMatch = pathname.match(/^\/guide\/([^/]+)\/?$/);
+  if (guideSlugMatch) {
+    const slug = decodeURIComponent(guideSlugMatch[1]);
+    try {
+      await connectDB();
+      const exists = await Guide.exists({ slug });
+      if (!exists) {
+        return NextResponse.rewrite(new URL("/404", req.url));
+      }
+    } catch {
+      // DB unreachable — fall through and let the page attempt its own render
+    }
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
