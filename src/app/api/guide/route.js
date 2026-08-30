@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "../../lib/db";
 import Guide from "../../../models/guide";
 import cloudinary from "../../lib/cloudinary";
+import { resolveContentImages } from "../../lib/guideImages";
 import { getGuides } from "../../hooks/getGuides";
 
 export const runtime = "nodejs";
@@ -28,7 +30,7 @@ export async function POST(req) {
     const form = await req.formData();
 
     const title = form.get("title");
-    const content = form.get("content") || "";
+    const content = await resolveContentImages(form, form.get("content") || "");
 
     let coverImage = "";
     const imgFile = form.get("coverImage");
@@ -56,6 +58,9 @@ export async function POST(req) {
       faqs: safeParse(form.get("faqs")),
       readTime: Number(form.get("readTime")) || 1,
     });
+
+    revalidatePath("/guide");
+    if (guide.slug) revalidatePath(`/guide/${guide.slug}`);
 
     return NextResponse.json({ success: true, guide });
   } catch (err) {

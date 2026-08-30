@@ -208,6 +208,7 @@ export default async function GuidePage({ params }) {
                   src={coverImage}
                   alt={guide.coverImageAlt || guide.title}
                   fill
+                  unoptimized
                   className="object-cover"
                   priority
                 />

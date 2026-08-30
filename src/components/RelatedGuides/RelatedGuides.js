@@ -21,6 +21,7 @@ export default function RelatedGuides({ guides }) {
                 src={guide.coverImage || guide.thumbnail || "/icon.png"}
                 alt={guide.coverImageAlt || guide.title}
                 fill
+                unoptimized
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>

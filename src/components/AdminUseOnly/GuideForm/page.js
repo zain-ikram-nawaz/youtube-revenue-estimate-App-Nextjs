@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- editor preview supports blob URLs before save */
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -33,6 +34,7 @@ const EMPTY_FORM = {
   tags: [],
   keywords: [],
   faqs: [],
+  contentImages: [],
 };
 
 const CHECKLIST_ITEMS = [
@@ -63,6 +65,8 @@ export default function GuideForm({ editData }) {
   const [wordCount, setWordCount] = useState(0);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
+  const contentImageInputRef = useRef(null);
+  const [contentImagePreviews, setContentImagePreviews] = useState({});
 
   // Populate form on edit
   useEffect(() => {
@@ -85,8 +89,10 @@ export default function GuideForm({ editData }) {
         tags: editData.tags || [],
         keywords: editData.keywords || [],
         faqs: editData.faqs || [],
+        contentImages: [],
       });
       if (editData.coverImage) setCoverPreview(editData.coverImage);
+      setContentImagePreviews({});
     }
   }, [editData]);
 
@@ -106,6 +112,46 @@ export default function GuideForm({ editData }) {
     if (!file) return;
     setFormData((p) => ({ ...p, coverImage: file }));
     setCoverPreview(URL.createObjectURL(file));
+  };
+
+  const handleContentImageChange = (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setMessage({ text: "Please choose an image file.", type: "error" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ text: "Content image max 5MB.", type: "error" });
+      return;
+    }
+
+    const id = `image-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const previewUrl = URL.createObjectURL(file);
+    const alt = file.name
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[-_]+/g, " ")
+      .replace(/[\[\]()`]/g, "")
+      .trim() || "Article image";
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? formData.content.length;
+    const end = textarea?.selectionEnd ?? start;
+    const markdown = `![${alt}](attachment:${id})`;
+    const newContent = `${formData.content.slice(0, start)}${markdown}${formData.content.slice(end)}`;
+
+    setFormData((previous) => ({
+      ...previous,
+      content: newContent,
+      contentImages: [...(previous.contentImages || []), { id, file, alt }],
+    }));
+    setContentImagePreviews((previous) => ({ ...previous, [`attachment:${id}`]: previewUrl }));
+
+    setTimeout(() => {
+      textarea?.focus();
+      textarea?.setSelectionRange(start + markdown.length, start + markdown.length);
+    }, 0);
   };
 
   // Toolbar action
@@ -131,7 +177,7 @@ export default function GuideForm({ editData }) {
     { label: "❝", action: () => applyFormat("\n> ", "", "blockquote") },
     { label: "</>", action: () => applyFormat("\n```\n", "\n```", "code here"), cls: "font-mono text-xs" },
     { label: "🔗", action: () => applyFormat("[", "](url)", "link text") },
-    { label: "IMG", action: () => applyFormat("![alt](", ")", "image-url"), cls: "text-xs" },
+    { label: "URL IMG", action: () => applyFormat("![alt](", ")", "image-url"), cls: "text-xs" },
   ];
 
   const handleSubmit = (e) =>
@@ -268,7 +314,7 @@ export default function GuideForm({ editData }) {
           </div>
           {coverPreview && (
             <div className="relative w-32 h-20 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
-              <Image src={coverPreview} alt="cover" fill className="object-cover" />
+              <Image src={coverPreview} alt="cover" fill unoptimized className="object-cover" />
               <button
                 type="button"
                 onClick={() => { setCoverPreview(null); setFormData((p) => ({ ...p, coverImage: null })); }}
@@ -302,6 +348,21 @@ export default function GuideForm({ editData }) {
                 {t.label}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => contentImageInputRef.current?.click()}
+              title="Upload an image from your computer"
+              className="px-2.5 py-1 text-sm rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition"
+            >
+              Upload image
+            </button>
+            <input
+              ref={contentImageInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleContentImageChange}
+              className="hidden"
+            />
             <div className="ml-auto text-xs text-gray-400 pr-2">Markdown supported</div>
           </div>
 
@@ -324,7 +385,20 @@ export default function GuideForm({ editData }) {
               <div className={`${activePane === "split" ? "w-1/2" : "w-full"} min-h-[520px] p-5 overflow-y-auto`}>
                 {formData.content ? (
                   <div className="prose prose-sm max-w-none prose-headings:font-bold prose-h2:text-xl prose-h2:border-b prose-h2:pb-2 prose-h2:border-gray-100 prose-a:text-blue-600 prose-strong:text-gray-900 prose-code:bg-gray-100 prose-code:px-1 prose-code:rounded prose-blockquote:border-l-4 prose-blockquote:border-green-500 prose-blockquote:bg-green-50 prose-blockquote:py-1">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      urlTransform={(url) => url}
+                      components={{
+                        img: ({ src, alt, ...props }) => (
+                          <img
+                            {...props}
+                            src={contentImagePreviews[src] || src}
+                            alt={alt || "Article image"}
+                            className="rounded-lg max-h-80 w-auto object-contain"
+                          />
+                        ),
+                      }}
+                    >
                       {formData.content}
                     </ReactMarkdown>
                   </div>

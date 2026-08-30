@@ -33,6 +33,7 @@ export default function Page({ data }) {
                   src={guide?.coverImage || guide?.thumbnail || "/icon.png"}
                   alt={guide?.coverImageAlt || guide?.title || "Guide"}
                   fill
+                  unoptimized
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>

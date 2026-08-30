@@ -81,6 +81,7 @@ export default function ListingGuide({ data, role, setEditData, setActiveTab, se
               src={guide?.coverImage || guide?.thumbnail || "/icon.png"}
               alt={guide?.title}
               fill
+              unoptimized
               className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
             <div className="absolute bottom-2 left-2">

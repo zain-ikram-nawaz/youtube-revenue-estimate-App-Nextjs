@@ -27,8 +27,22 @@ export const handleSubmitGuide = async ({
       data.append("removeCoverImage", "true");
     }
 
+    // Content images are uploaded with the guide so unfinished/removed images
+    // never need to be stored separately. The API replaces these placeholders
+    // in Markdown with their permanent Cloudinary URLs.
+    const pendingContentImages = (formData.contentImages || []).filter(({ id }) =>
+      formData.content.includes(`attachment:${id}`)
+    );
+    pendingContentImages.forEach(({ id, file }) => {
+      data.append(`contentImage_${id}`, file, file.name);
+    });
+    data.append(
+      "contentImages",
+      JSON.stringify(pendingContentImages.map(({ id, alt }) => ({ id, alt })))
+    );
+
     // All other text fields
-    const skip = ["coverImage", "tags", "keywords", "faqs"];
+    const skip = ["coverImage", "contentImages", "tags", "keywords", "faqs"];
     Object.keys(formData).forEach((key) => {
       if (skip.includes(key)) return;
       data.append(key, formData[key] ?? "");
@@ -42,7 +56,19 @@ export const handleSubmitGuide = async ({
     const url = editId ? `/api/guide/${editId}` : "/api/guide";
     const method = editId ? "put" : "post";
 
-    await axios[method](url, data, { headers: { "Content-Type": "multipart/form-data" } });
+    const response = await axios[method](url, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    const savedGuide = response.data?.guide;
+    if (editId && savedGuide) {
+      setFormData((previous) => ({
+        ...previous,
+        content: savedGuide.content || "",
+        coverImage: savedGuide.coverImage || null,
+        contentImages: [],
+      }));
+    }
 
     setMessage({
       text: editId ? "Guide updated successfully!" : "Guide published successfully!",
@@ -54,7 +80,7 @@ export const handleSubmitGuide = async ({
         title: "", category: "", author: "ChannelIncome Team", reviewedBy: "", lastReviewedAt: "", status: "published",
         coverImage: null, coverImageAlt: "", content: "",
         metaTitle: "", metaDescription: "", excerpt: "",
-        tags: [], keywords: [], faqs: [],
+        tags: [], keywords: [], faqs: [], contentImages: [],
       });
     }
   } catch (err) {

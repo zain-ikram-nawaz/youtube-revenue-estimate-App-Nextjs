@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "../../../lib/db";
 import Guide from "../../../../models/guide";
 import cloudinary from "../../../lib/cloudinary";
+import { resolveContentImages } from "../../../lib/guideImages";
 
 const MAX = 5 * 1024 * 1024;
 
@@ -45,7 +47,7 @@ export async function PUT(req, { params }) {
       lastReviewedAt: form.get("lastReviewedAt") || undefined,
       status: form.get("status") || "published",
       coverImageAlt: form.get("coverImageAlt") || title,
-      content: form.get("content") || existing.content,
+      content: await resolveContentImages(form, form.get("content") || existing.content),
       metaTitle: form.get("metaTitle"),
       metaDescription: form.get("metaDescription"),
       excerpt: form.get("excerpt"),
@@ -74,6 +76,8 @@ export async function PUT(req, { params }) {
     }
 
     const updated = await Guide.findByIdAndUpdate(id, update, { new: true });
+    revalidatePath("/guide");
+    if (updated?.slug) revalidatePath(`/guide/${updated.slug}`);
     return NextResponse.json({ success: true, guide: updated });
   } catch (err) {
     console.error("PUT guide error:", err);
@@ -94,6 +98,8 @@ export async function DELETE(req, { params }) {
     }
 
     await Guide.findByIdAndDelete(id);
+    revalidatePath("/guide");
+    if (guide.slug) revalidatePath(`/guide/${guide.slug}`);
     return NextResponse.json({ success: true, message: "Guide deleted" });
   } catch (err) {
     console.error("DELETE guide error:", err);
