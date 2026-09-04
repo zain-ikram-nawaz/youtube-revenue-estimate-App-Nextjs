@@ -105,12 +105,7 @@ const nextConfig = {
                 source: '/guide/how-to-start-a-youtube-channel-step-by-step-beginners-guide',
                 destination: '/tool/youtube-revenue-calculator',
                 permanent: true,
-            },
-            {
-                source: '/guide/youtube-monetization-rpm-cpm-guide',
-                destination: '/tool/youtube-revenue-calculator',
-                permanent: true,
-            },
+            }
         ];
     },
 };
