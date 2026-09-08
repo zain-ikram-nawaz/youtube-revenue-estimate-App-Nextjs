@@ -34,8 +34,8 @@ export const metadata = {
     type: "website",
     images: [{
       url: "https://channelincome.com/icon.png",
-      width: 1200,
-      height: 630,
+      width: 500,
+      height: 303,
       alt: "YouTube Revenue Calculator — Free CPM & RPM Estimator | ChannelIncome"
     }]
   },
@@ -180,7 +180,7 @@ const pills = [
       name: "How to Calculate YouTube Revenue",
       description: "Use the ChannelIncome YouTube Revenue Calculator to estimate your channel earnings in under 30 seconds.",
       step: [
-        { "@type": "HowToStep", position: 1, name: "Enter your monthly views", text: "Type in your average monthly view count. You can find this in YouTube Studio under Analytics > Overview." },
+        { "@type": "HowToStep", position: 1, name: "Enter a channel URL or name", text: "Enter the YouTube channel URL or channel name you want to analyze." },
         { "@type": "HowToStep", position: 2, name: "Select your content niche", text: "Choose the category that best describes your content — Finance, Gaming, Education, etc. This sets the RPM range." },
         { "@type": "HowToStep", position: 3, name: "Choose your audience country", text: "Select the country where most of your viewers are based. This adjusts the CPM for that market." },
         { "@type": "HowToStep", position: 4, name: "Get your earnings estimate", text: "The calculator returns a realistic low-to-high monthly and yearly revenue range based on real RPM/CPM data." }
@@ -206,7 +206,7 @@ const pills = [
       <Script id="howto-schema"      type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.howTo) }} />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas.breadcrumb) }} />
 
-      <main className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-background text-foreground">
 
         {/* ════════════════════════════
             QUICK ANSWER (GEO + AEO)
@@ -398,9 +398,9 @@ const pills = [
         <section id="faq" className="bg-background px-4 py-12">
           <div className="max-w-4xl mx-auto">
             <p className="text-[11px] font-semibold tracking-widest uppercase text-accent mb-2">FAQ</p>
-            <h2 className="text-xl md:text-2xl font-bold text-foreground tracking-tight mb-2">
+            <p className="text-xl md:text-2xl font-bold text-foreground tracking-tight mb-2">
               Common questions about YouTube revenue
-            </h2>
+            </p>
             <p className="text-sm text-muted mb-8">
               Everything creators ask about YouTube earnings, RPM, CPM, and monetization in 2026.
             </p>
@@ -444,7 +444,7 @@ const pills = [
           </div>
         </section>
 
-      </main>
+      </div>
 
       <div className="fixed bottom-4 right-4 md:hidden z-50">
         <Link

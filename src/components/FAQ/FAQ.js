@@ -68,7 +68,7 @@ export default function FAQPage({ faq = [] }) {
               <div
                 className={`overflow-hidden transition-all duration-300 ${
                   openIndex === i
-                    ? "max-h-40 opacity-100"
+                    ? "max-h-[1000px] opacity-100"
                     : "max-h-0 opacity-0"
                 }`}
               >

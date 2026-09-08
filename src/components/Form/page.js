@@ -40,7 +40,7 @@ export default function Form({
 
           {/* Input */}
           <div>
-            <label className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">
+            <label htmlFor="channelUrl" className="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">
               Channel URL or Name
             </label>
 
@@ -70,11 +70,12 @@ export default function Form({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <div>
-              <label className="block text-xs font-bold text-white/60 uppercase mb-2">
+              <label htmlFor="contentNiche" className="block text-xs font-bold text-white/60 uppercase mb-2">
                 Content Niche
               </label>
 
               <select
+                id="contentNiche"
                 value={niche}
                 onChange={(e) => setNiche(e.target.value)}
                 className="w-full px-3 py-3 rounded-xl bg-white/5 text-white border border-white/15 focus:border-primary outline-none"
@@ -90,11 +91,12 @@ export default function Form({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white/60 uppercase mb-2">
+              <label htmlFor="audienceRegion" className="block text-xs font-bold text-white/60 uppercase mb-2">
                 Audience Region
               </label>
 
               <select
+                id="audienceRegion"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full px-3 py-3 rounded-xl bg-white/5 text-white border border-white/15 focus:border-primary outline-none"
