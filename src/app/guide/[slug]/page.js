@@ -16,7 +16,7 @@ export const revalidate = 3600;
 export async function generateStaticParams() {
   try {
     await connectDB();
-    const guides = await Guide.find({}).select("slug").lean().maxTimeMS(5000);
+    const guides = await Guide.find({ status: "published" }).select("slug").lean().maxTimeMS(5000);
     return guides.map((g) => ({ slug: g.slug }));
   } catch (e) {
     console.error("generateStaticParams error (returning empty):", e.message);
@@ -27,8 +27,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   await connectDB();
-  const guide = await Guide.findOne({ slug }).lean();
-  if (!guide) return { title: "Guide Not Found", robots: { index: false, follow: true } };
+  const guide = await Guide.findOne({ slug, status: "published" }).lean();
+  if (!guide) notFound();
 
   const canonicalUrl = `https://channelincome.com/guide/${guide.slug}`;
   const ogImage = guide.coverImage || guide.thumbnail || "https://channelincome.com/icon.png";
@@ -68,7 +68,7 @@ function extractHeadings(markdown = "") {
 export default async function GuidePage({ params }) {
   const { slug } = await params;
   await connectDB();
-  const guide = await Guide.findOne({ slug }).lean();
+  const guide = await Guide.findOne({ slug, status: "published" }).lean();
   if (!guide) notFound();
 
   const headings = extractHeadings(guide.content || "");

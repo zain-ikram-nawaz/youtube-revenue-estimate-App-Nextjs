@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import Script from "next/script";
+import ConsentBanner from "../components/ConsentBanner/ConsentBanner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -70,14 +71,37 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${jakarta.variable} ${jbMono.variable}`}>
+      <head>
+        {/* Google AdSense */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5120693596524634"
+          crossOrigin="anonymous"
+        ></script>
+      </head>
       <body className="antialiased font-sans">
 
-        {/* Ahrefs Analytics */}
+        {/* Ahrefs Analytics — cookieless, aggregate-only, no consent gate needed */}
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="NIdfnJ32uBKcHx+IqKcQWg"
           strategy="afterInteractive"
         />
+
+        {/* Google Consent Mode v2 — default to denied until the visitor makes a choice */}
+        <Script id="consent-mode-default" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              analytics_storage: 'denied',
+              wait_for_update: 500
+            });
+          `}
+        </Script>
 
         {/* GTM Script */}
         <Script
@@ -85,7 +109,7 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'};var f=d.getElementsByTagName(s)[0],
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             })(window,document,'script','dataLayer','GTM-54N955N7');`,
@@ -102,6 +126,8 @@ export default function RootLayout({ children }) {
             gtag('config', 'G-E89R0241YL');
           `}
         </Script>
+
+        <ConsentBanner />
 
         {/* Organization Schema */}
         <Script

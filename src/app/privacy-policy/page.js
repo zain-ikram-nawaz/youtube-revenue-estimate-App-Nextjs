@@ -37,9 +37,10 @@ export default function PrivacyPolicy() {
     { item: "Personal data collected", value: "None — we do not collect names, emails, or channel data" },
     { item: "YouTube channel data", value: "Not stored after your session ends" },
     { item: "Analytics", value: "Google Analytics tracks site usage (anonymous)" },
-    { item: "Cookies", value: "Standard session cookies only — no tracking cookies" },
-    { item: "Third-party sharing", value: "We do not sell or share your data" },
-    { item: "GDPR", value: "Compliant — you can use the tool without creating an account" },
+    { item: "Advertising", value: "Google AdSense and partners may use cookies to serve and measure ads" },
+    { item: "Cookies", value: "Session cookies plus optional analytics/ad cookies — you choose via our consent banner" },
+    { item: "Third-party sharing", value: "We do not sell your data; ad partners process data under their own policies" },
+    { item: "GDPR / EEA, UK, CH visitors", value: "Ads and analytics cookies are off by default until you consent" },
   ];
 
   return (
@@ -111,7 +112,16 @@ export default function PrivacyPolicy() {
               <strong className="text-foreground">Analytics:</strong> We use Google Analytics to track site performance and usage patterns. This data is anonymous — it does not personally identify you and is used only to improve the tool.
             </p>
             <p>
-              <strong className="text-foreground">Cookies:</strong> ChannelIncome uses standard session cookies. No third-party tracking cookies are used. You can control cookie settings in your browser at any time.
+              <strong className="text-foreground">Cookies:</strong> ChannelIncome uses standard session cookies required for the site to function. We also use Google Analytics and, where enabled, Google AdSense — both of which may set cookies for analytics measurement and ad delivery. You can control these via the cookie consent banner shown on your first visit, or at any time in your browser settings.
+            </p>
+            <p>
+              <strong className="text-foreground">Advertising (Google AdSense):</strong> ChannelIncome may display ads served by Google AdSense and its advertising partners. Google and its partners use cookies — including the DoubleClick cookie — to serve ads based on your prior visits to this and other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visit to this site and/or other sites on the Internet. You may opt out of personalized advertising by visiting{" "}
+              <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">Google Ads Settings</a>{" "}
+              or{" "}
+              <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary underline">aboutads.info/choices</a>.
+            </p>
+            <p>
+              <strong className="text-foreground">Your consent choices:</strong> For visitors in the EEA, UK, and Switzerland, analytics and advertising cookies are disabled by default (Google Consent Mode) until you actively accept them through our consent banner. You can change your choice at any time by clearing your browser&#39;s local storage for this site and reloading the page.
             </p>
             <p>
               <strong className="text-foreground">Data deletion:</strong> By design, your YouTube channel data is not retained after each calculator session. We keep no database of your searches or estimates.

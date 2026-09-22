@@ -8,6 +8,7 @@ export const getGuides = cache(async (page = 1, limit = 8, q = "") => {
 
     const filter = q
       ? {
+          status: "published",
           $or: [
             { title: { $regex: q, $options: "i" } },
             { excerpt: { $regex: q, $options: "i" } },
@@ -15,7 +16,7 @@ export const getGuides = cache(async (page = 1, limit = 8, q = "") => {
             { keywords: { $regex: q, $options: "i" } },
           ],
         }
-      : {};
+      : { status: "published" };
 
     // Parallel execution: Dono kaam ek sath honge
     const [totalGuides, rawGuides] = await Promise.all([

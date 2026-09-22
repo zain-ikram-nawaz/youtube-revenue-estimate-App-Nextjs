@@ -123,6 +123,52 @@ export default function YouTubeChannelComparisonPage() {
           </div>
         </section>
 
+        {/* ════════════════════════════
+            HOW IT WORKS
+        ════════════════════════════ */}
+        <section className="bg-background border-y border-border px-4 py-12">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-[11px] font-semibold tracking-widest uppercase text-accent mb-2">How it works</p>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground tracking-tight mb-4">
+              Two channels, one side-by-side read
+            </h2>
+            <p className="text-sm text-muted leading-relaxed mb-8 max-w-2xl">
+              Enter two channels and the tool pulls each one&apos;s public stats — subscribers, total views,
+              and video count — then runs both through the same RPM/CPM engine used by our revenue calculator
+              to estimate ad earnings for each. The niche and audience region you select apply to both
+              channels equally, so the comparison stays apples-to-apples rather than mixing benchmarks.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                {
+                  title: "Public stats only",
+                  desc: "Subscriber count, total views, and video count come from each channel's public YouTube data — nothing private or requiring channel access.",
+                },
+                {
+                  title: "Same revenue engine, both sides",
+                  desc: "Both channels are scored with identical niche and country RPM/CPM multipliers, so differences you see reflect scale and views, not inconsistent assumptions.",
+                },
+                {
+                  title: "Estimates, not Studio data",
+                  desc: "Neither channel's real AdSense or YouTube Studio numbers are accessible to any third-party tool, including this one. Treat results as directional benchmarks.",
+                },
+                {
+                  title: "Best for same-niche comparisons",
+                  desc: "Accuracy is highest when both channels share a niche and audience region. Comparing across very different niches works, but rerun each side with its own settings for a fairer read.",
+                },
+              ].map(({ title, desc }) => (
+                <div key={title} className="flex items-start gap-3 bg-secondary border border-border rounded-lg p-4">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
+                    <p className="text-xs text-muted leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <ChannelComparison />
 
         <section id="faq" className="bg-background px-4 py-12">

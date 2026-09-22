@@ -118,6 +118,53 @@ export default function YouTubeTagExtractorPage() {
           </div>
         </section>
 
+        {/* ════════════════════════════
+            HOW IT WORKS
+        ════════════════════════════ */}
+        <section className="bg-background border-y border-border px-4 py-12">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-[11px] font-semibold tracking-widest uppercase text-accent mb-2">How it works</p>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground tracking-tight mb-4">
+              Real tags first, AI suggestions as a fallback
+            </h2>
+            <p className="text-sm text-muted leading-relaxed mb-8 max-w-2xl">
+              Paste a video URL and the tool calls YouTube&apos;s official Data API to pull that video&apos;s
+              actual tags — the same metadata field creators fill in when uploading. If a video has no tags
+              set, or YouTube doesn&apos;t expose them for that video, the tool falls back to generating 15
+              keyword suggestions from the video&apos;s title and description instead of returning an empty
+              result.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                {
+                  title: "Official API, not scraping",
+                  desc: "Tags are fetched through YouTube's Data API, which reflects exactly what the uploader entered — no HTML scraping or guesswork involved.",
+                },
+                {
+                  title: "AI fallback when tags are empty",
+                  desc: "Some creators skip tags entirely. When that happens, the tool analyzes the title and description to generate 15 relevant keyword suggestions instead.",
+                },
+                {
+                  title: "Tags are a minor signal",
+                  desc: "Title, thumbnail, and audience retention drive far more of YouTube's ranking than tags do. Use extracted tags to spot competitor keyword patterns, not as a growth silver bullet.",
+                },
+                {
+                  title: "Works on any public video",
+                  desc: "Paste a link to your own upload or a competitor's video — the extractor works the same way for any public YouTube video URL.",
+                },
+              ].map(({ title, desc }) => (
+                <div key={title} className="flex items-start gap-3 bg-secondary border border-border rounded-lg p-4">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground mb-1">{title}</p>
+                    <p className="text-xs text-muted leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <TagExtractor />
 
         <section id="faq" className="bg-background px-4 py-12">

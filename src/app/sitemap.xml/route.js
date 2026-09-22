@@ -54,7 +54,7 @@ export async function GET() {
 
   try {
     await connectDB();
-    const guides = await Guide.find({}).sort({ updatedAt: -1 }).maxTimeMS(5000);
+    const guides = await Guide.find({ status: "published" }).sort({ updatedAt: -1 }).maxTimeMS(5000);
 
     // Build XML
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>`;
