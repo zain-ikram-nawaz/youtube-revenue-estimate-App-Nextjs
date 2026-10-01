@@ -80,15 +80,18 @@ export default function RootLayout({ children }) {
         ></script>
       </head>
       <body className="antialiased font-sans">
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-54N955N7"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
 
-        {/* Ahrefs Analytics — cookieless, aggregate-only, no consent gate needed */}
-        <Script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="NIdfnJ32uBKcHx+IqKcQWg"
-          strategy="afterInteractive"
-        />
-
-        {/* Google Consent Mode v2 — default to denied until the visitor makes a choice */}
+        {/* Google Consent Mode v2 — default to denied until the visitor makes a choice.
+            Must run before GTM so every tag inside the container respects it. */}
         <Script id="consent-mode-default" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -103,7 +106,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* GTM Script */}
+        {/* Google Tag Manager — all tracking (GA4, Ahrefs, pixels, etc.) is managed inside the container */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
@@ -115,17 +118,6 @@ export default function RootLayout({ children }) {
             })(window,document,'script','dataLayer','GTM-54N955N7');`,
           }}
         />
-
-        {/* Google Analytics */}
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-E89R0241YL" strategy="afterInteractive" />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-E89R0241YL');
-          `}
-        </Script>
 
         <ConsentBanner />
 
@@ -156,15 +148,6 @@ export default function RootLayout({ children }) {
             }),
           }}
         />
-
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-54N955N7"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          ></iframe>
-        </noscript>
 
         <Navbar />
 
