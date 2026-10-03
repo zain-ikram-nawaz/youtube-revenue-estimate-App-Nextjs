@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -102,7 +102,7 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
-function WaterSurface({ reducedMotion = false }) {
+function WaterSurface({ reducedMotion = false, segments = [150, 100] }) {
   const materialRef = useRef(null);
   const { clock } = useThree();
   const mouseTarget = useRef(new THREE.Vector2(0, 0));
@@ -154,7 +154,7 @@ function WaterSurface({ reducedMotion = false }) {
         rippleTarget.current = 0;
       }}
     >
-      <planeGeometry args={[24, 16, 150, 100]} />
+      <planeGeometry args={[24, 16, segments[0], segments[1]] />
       <shaderMaterial
         ref={materialRef}
         uniforms={uniforms}
@@ -166,13 +166,15 @@ function WaterSurface({ reducedMotion = false }) {
   );
 }
 
-function CameraRig() {
+function CameraRig({ reducedMotion = false }) {
   const { camera, pointer } = useThree();
   const target = useMemo(() => new THREE.Vector3(), []);
 
   useFrame(() => {
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.3, 0.035);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2.8 + pointer.y * 0.12, 0.035);
+    if (!reducedMotion) {
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, pointer.x * 0.3, 0.035);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, 2.8 + pointer.y * 0.12, 0.035);
+    }
     target.set(0, 0, 0);
     camera.lookAt(target);
   });
@@ -180,20 +182,50 @@ function CameraRig() {
   return null;
 }
 
+function WaterFallback({ className = '' }) {
+  return (
+    <div
+      className={`h-full w-full bg-[radial-gradient(circle_at_30%_20%,rgba(125,233,237,0.22),transparent_32%),linear-gradient(160deg,#0b7285,#031629_70%)] ${className}`}
+      role="img"
+      aria-label="A calm blue water-inspired background"
+    />
+  );
+}
+
 export default function WaterCanvas({ reducedMotion = false, className = '' }) {
+  const [webglAvailable, setWebglAvailable] = useState(null);
+  const [lowPower, setLowPower] = useState(false);
+
+  useEffect(() => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    setWebglAvailable(Boolean(context));
+    setLowPower(
+      window.matchMedia('(max-width: 768px)').matches ||
+        (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4),
+    );
+  }, []);
+
+  if (webglAvailable !== true) {
+    return <WaterFallback className={className} />;
+  }
+
+  const segments = lowPower ? [96, 64] : [150, 100];
+  const maxDpr = lowPower ? 1.15 : 1.5;
+
   return (
     <Canvas
       className={className}
       camera={{ position: [0, 2.8, 7.4], fov: 43, near: 0.1, far: 50 }}
-      dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      dpr={[1, maxDpr]}
+      gl={{ antialias: !lowPower, alpha: true, powerPreference: 'high-performance' }}
       onCreated={({ gl }) => gl.setClearColor('#031824', 1)}
     >
       <ambientLight intensity={0.45} color="#9de7ed" />
       <directionalLight position={[-4, 7, 4]} intensity={2.2} color="#b8ffff" />
       <directionalLight position={[5, 2, -3]} intensity={0.55} color="#267b9d" />
-      <WaterSurface reducedMotion={reducedMotion} />
-      <CameraRig />
+      <WaterSurface reducedMotion={reducedMotion} segments={segments} />
+      <CameraRig reducedMotion={reducedMotion} />
     </Canvas>
   );
 }
