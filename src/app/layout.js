@@ -121,7 +121,6 @@ export default function RootLayout({ children }) {
 
         <ConsentBanner />
 
-        {/* Organization Schema */}
         <Script
           id="org-schema"
           type="application/ld+json"
