@@ -154,7 +154,7 @@ function WaterSurface({ reducedMotion = false, segments = [150, 100] }) {
         rippleTarget.current = 0;
       }}
     >
-      <planeGeometry args={[24, 16, segments[0], segments[1]] />
+      <planeGeometry args={[24, 16, segments[0], segments[1]]} />
       <shaderMaterial
         ref={materialRef}
         uniforms={uniforms}
