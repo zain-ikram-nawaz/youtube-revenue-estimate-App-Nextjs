@@ -217,6 +217,7 @@ export default function WaterCanvas({ reducedMotion = false, className = '' }) {
     <Canvas
       className={className}
       camera={{ position: [0, 2.8, 7.4], fov: 43, near: 0.1, far: 50 }}
+      frameloop={reducedMotion ? 'demand' : 'always'}
       dpr={[1, maxDpr]}
       gl={{ antialias: !lowPower, alpha: true, powerPreference: 'high-performance' }}
       onCreated={({ gl }) => gl.setClearColor('#031824', 1)}
