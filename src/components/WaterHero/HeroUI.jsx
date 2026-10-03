@@ -2,14 +2,15 @@
 
 import { motion, useReducedMotion, useSpring } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 export default function HeroUI() {
   const prefersReducedMotion = useReducedMotion();
-  const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
   const springX = useSpring(0, { stiffness: 90, damping: 18, mass: 0.5 });
   const springY = useSpring(0, { stiffness: 90, damping: 18, mass: 0.5 });
+  const rotateX = useSpring(0, { stiffness: 80, damping: 18, mass: 0.6 });
+  const rotateY = useSpring(0, { stiffness: 80, damping: 18, mass: 0.6 });
 
   const handlePointerMove = useCallback(
     (event) => {
@@ -17,18 +18,20 @@ export default function HeroUI() {
       const rect = event.currentTarget.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
       const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-      setPointer({ x, y });
       springX.set(x * -14);
       springY.set(y * -10);
+      rotateX.set(y * -1.5);
+      rotateY.set(x * 2);
     },
-    [prefersReducedMotion, springX, springY],
+    [prefersReducedMotion, springX, springY, rotateX, rotateY],
   );
 
   const resetPointer = useCallback(() => {
-    setPointer({ x: 0, y: 0 });
     springX.set(0);
     springY.set(0);
-  }, [springX, springY]);
+    rotateX.set(0);
+    rotateY.set(0);
+  }, [springX, springY, rotateX, rotateY]);
 
   return (
     <div className="pointer-events-none relative flex min-h-[720px] items-center px-6 py-24 sm:px-10 lg:px-16">
@@ -40,9 +43,7 @@ export default function HeroUI() {
       >
         <motion.div
           className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-slate-950/25 p-7 text-white shadow-2xl shadow-cyan-950/30 backdrop-blur-xl sm:p-10 lg:p-14"
-          animate={prefersReducedMotion ? undefined : { rotateX: pointer.y * -1.5, rotateY: pointer.x * 2 }}
-          transition={{ type: 'spring', stiffness: 80, damping: 18, mass: 0.6 }}
-          style={{ transformStyle: 'preserve-3d' }}
+          style={prefersReducedMotion ? { transformStyle: 'preserve-3d' } : { rotateX, rotateY, transformStyle: 'preserve-3d' }}
         >
           <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-cyan-300/15 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-16 h-48 w-48 rounded-full bg-blue-500/15 blur-3xl" />
